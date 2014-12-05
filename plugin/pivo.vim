@@ -58,8 +58,8 @@ endfunction
 
 function! s:GetPivoId()
     let g:PivoId = system(g:cmdPivoId)
-    /g:PivoId
-    execute "%s/  /\* /g"
+    call search(g:PivoId)
+    execute "s/  /\* /"
 endfunction
 
 function! s:SetupPivo()
