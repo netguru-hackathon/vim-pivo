@@ -31,6 +31,11 @@ function! s:PivoBufferOpen()
     endif
 endfunction
 
+function! s:SetPivoBuffer()
+    nnoremap <buffer> q :quit<CR>
+endfunction
+autocmd BufNewFile __Pivotal__ call s:SetPivoBuffer()
+
 command! -nargs=0 Pivo call s:PivoBufferOpen()
 
 " END
