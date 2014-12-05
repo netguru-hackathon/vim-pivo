@@ -7,6 +7,8 @@ let s:keepcpo     = &cpo
 set cpo&vim
 
 let PivoBufferName = "__Pivotal__"
+let PivoProjectId  = 0
+let PivoApiToken   = 0
 
 function! s:PivoBufferOpen()
     " Check whether the buffer is already created
