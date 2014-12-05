@@ -9,7 +9,8 @@ set cpo&vim
 let PivoBufferName = "__Pivotal__"
 
 let currentDir = expand('<sfile>:p:h')
-let getCmd = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 
 " PUBLIC
 
@@ -36,11 +37,14 @@ function! s:PivoBufferOpen()
     endif
 endfunction
 
+command! -nargs=0 Pivo call s:PivoBufferOpen()
+
+" PRIVATE
+
 function! s:SetPivoConnection()
-	let storiesOutput = system(g:getCmd)
-	call setline(line('.'), getline('.') . ' ' . storiesOutput)
+	let storiesOutput = system(g:cmdListStories)
+	call append(line('$'), split(storiesOutput, "\n"))
 endfunction
-autocmd BufNewFile __Pivotal__ call s:SetPivoConnection()
 
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
@@ -51,11 +55,19 @@ function! s:SetPivoBuffer()
     setlocal bufhidden=hide
     setlocal noswapfile
 endfunction
-autocmd BufNewFile __Pivotal__ call s:SetPivoBuffer()
 
-command! -nargs=0 Pivo call s:PivoBufferOpen()
+function! s:GetPivoId()
+    let g:PivoId = system(g:cmdPivoId)
+    /g:PivoId
+    execute "%s/  /\* /g"
+endfunction
 
-" PRIVATE
+function! s:SetupPivo()
+    call s:SetPivoConnection()
+    call s:GetPivoId()
+    call s:SetPivoBuffer()
+endfunction
+autocmd BufNewFile __Pivotal__ call s:SetupPivo()
 
 function! s:pivotal_settings_set()
     if g:PivoProjectId != 0 && g:PivoApiToken != 0
