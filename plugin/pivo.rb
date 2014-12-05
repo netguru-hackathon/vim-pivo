@@ -13,7 +13,7 @@ class Pivo
 
   def print_stories
     project.stories.all.each do |story|
-      puts "[##{story.id}] - {#{story.current_state}} - #{story.name}"
+      puts "  [##{story.id}] - {#{story.current_state}} #{story.name} {#{story.owned_by}}"
     end
   end
 end
