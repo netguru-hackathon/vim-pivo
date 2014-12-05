@@ -7,10 +7,9 @@ let s:keepcpo     = &cpo
 set cpo&vim
 
 let PivoBufferName = "__Pivotal__"
-let PivoProjectId  = "1018722"
-let PivoApiToken   = "abcd7da7afc739ec453422d61c821247"
 
-let getCmd = 'ruby pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+let currentDir = expand('<sfile>:p:h')
+let getCmd = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
 
 " PUBLIC
 
@@ -38,10 +37,8 @@ function! s:PivoBufferOpen()
 endfunction
 
 function! s:SetPivoConnection()
-    if s:pivotal_settings_set()
-        let storiesOutput = system(g:getCmd)
-        call setline(line('.'), getline('.') . ' ' . storiesOutput)
-    endif
+	let storiesOutput = system(g:getCmd)
+	call setline(line('.'), getline('.') . ' ' . storiesOutput)
 endfunction
 autocmd BufNewFile __Pivotal__ call s:SetPivoConnection()
 
