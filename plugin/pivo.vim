@@ -13,6 +13,10 @@ let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories
 let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 
 " PUBLIC
+"
+function! s:GetPivoId()
+    let g:PivoId = system(g:cmdPivoId)
+endfunction
 
 function! s:PivoBufferOpen()
     " Check whether the buffer is already created
@@ -37,13 +41,25 @@ function! s:PivoBufferOpen()
     endif
 endfunction
 
+function! s:PivoInsert()
+    " Insert current PivoId to the current buffer
+    call s:GetPivoId()
+    put =g:PivoId
+endfunction
+
 command! -nargs=0 Pivo call s:PivoBufferOpen()
+command! -nargs=0 PivoInsert call s:PivoInsert()
 
 " PRIVATE
 
 function! s:SetPivoConnection()
 	let storiesOutput = system(g:cmdListStories)
 	call append(line('$'), split(storiesOutput, "\n"))
+endfunction
+
+function! s:UpdateCurrentPivoIdDisplay()
+    call search(g:PivoId)
+    execute "s/  /\* /"
 endfunction
 
 function! s:SetPivoBuffer()
@@ -56,15 +72,10 @@ function! s:SetPivoBuffer()
     setlocal noswapfile
 endfunction
 
-function! s:GetPivoId()
-    let g:PivoId = system(g:cmdPivoId)
-    call search(g:PivoId)
-    execute "s/  /\* /"
-endfunction
-
 function! s:SetupPivo()
-    call s:SetPivoConnection()
     call s:GetPivoId()
+    call s:UpdateCurrentPivoIdDisplay()
+    call s:SetPivoConnection()
     call s:SetPivoBuffer()
 endfunction
 autocmd BufNewFile __Pivotal__ call s:SetupPivo()
