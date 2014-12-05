@@ -35,6 +35,13 @@ function! s:PivoBufferOpen()
     endif
 endfunction
 
+function! s:SetPivoConnection()
+    if s:pivotal_settings_set()
+        " Read or download Pivotal stories here
+    endif
+endfunction
+autocmd BufNewFile __Pivotal__ call s:SetPivoConnection()
+
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
     setlocal nowrap
@@ -45,6 +52,12 @@ autocmd BufNewFile __Pivotal__ call s:SetPivoBuffer()
 command! -nargs=0 Pivo call s:PivoBufferOpen()
 
 " PRIVATE
+
+function! s:pivotal_settings_set()
+    if g:PivoProjectId != 0 && g:PivoApiToken != 0
+        return 1
+    endif
+endfunction
 
 " END
 let &cpo= s:keepcpo
