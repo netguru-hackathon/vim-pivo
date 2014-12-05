@@ -37,6 +37,8 @@ endfunction
 
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
+    setlocal nowrap
+    setlocal nonumber
 endfunction
 autocmd BufNewFile __Pivotal__ call s:SetPivoBuffer()
 
