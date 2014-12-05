@@ -6,12 +6,24 @@ let g:loaded_pivo = 1
 let s:keepcpo     = &cpo
 set cpo&vim
 
+"TODO: Investigate /n in subs
+"TODO: DO NOT SAVE API_KEYS in .vimrc
+"TODO: TEst it out
+"TODO: Fix readme header
+"TODO: Make sure that subs works from the ^
+"TODO: Not always connect to the Pivotal
+"TODO: Some configuration for caching
+"TODO: Rename repo to vim-pivo
+
+"TODO: BUffor name as project name?
 let PivoBufferName = "__Pivotal__"
 
 let currentDir = expand('<sfile>:p:h')
+"TODO: cat without newline at the begining
 "let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
 let cmdListStories = "cat ~/netguru/vim_pivo/pivo_mock"
 let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
+"TODO: Vim way instead of cat files?
 
 " PUBLIC
 "
@@ -43,23 +55,26 @@ function! s:PivoBufferOpen()
 endfunction
 
 function! s:PivoIndianaJohnes()
-	let cmdIndiana = "cp " . g:currentDir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
-	echo cmdIndiana
-	let ret = system(cmdIndiana)
+    "TODO: make it work? and maybe use the Vim way? 
+    let cmdIndiana = "cp " . g:currentDir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
+    echo cmdIndiana
+    let ret = system(cmdIndiana)
 endfunction
 
 function! s:PivoDetach()
-	let ret = system("rm ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg")
+    let ret = system("rm ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg")
 endfunction
 
 function! s:PivoInsert()
     " Insert current PivoId to the current buffer
     call s:GetPivoId()
+    " Put without newline!
     put =g:PivoId
 endfunction
 
 command! -nargs=0 Pivo call s:PivoBufferOpen()
 command! -nargs=0 PivoInsert call s:PivoInsert()
+"TODO: better name for Indiana
 command! -nargs=0 PivoIndianaJones call s:PivoIndianaJohnes()
 command! -nargs=0 PivoDetach call s:PivoDetach()
 
@@ -82,6 +97,7 @@ function! g:SetCurrentPivoId()
     let repl = substitute(line2, '].*$', '', 'g')
     setlocal modifiable
     execute "%s/*/ /g"
+    "TODO: Read only warning!
     call search(repl)
     execute "s/  /\* /"
     setlocal readonly
@@ -91,6 +107,7 @@ endfunction
 
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
+    "TODO: Change 'c' to '-' -> fugitive way
     nnoremap <buffer> c :call g:SetCurrentPivoId()<CR>
     setlocal nowrap
     setlocal nonumber
@@ -107,6 +124,7 @@ function! s:SetupPivo()
 endfunction
 autocmd BufNewFile __Pivotal__ call s:SetupPivo()
 
+"TODO: Fix and use in Connection
 function! s:pivotal_settings_set()
     if g:PivoProjectId != 0 && g:PivoApiToken != 0
         return 1
