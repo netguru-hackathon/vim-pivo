@@ -56,6 +56,8 @@ command! -nargs=0 Pivo call s:PivoBufferOpen()
 function! s:pivotal_settings_set()
     if g:PivoProjectId != 0 && g:PivoApiToken != 0
         return 1
+    else
+	return 0
     endif
 endfunction
 
