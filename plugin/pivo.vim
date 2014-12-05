@@ -9,7 +9,8 @@ set cpo&vim
 let PivoBufferName = "__Pivotal__"
 
 let currentDir = expand('<sfile>:p:h')
-let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+"let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+let cmdListStories = "cat ~/netguru/vim_pivo/pivo_mock"
 let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 
 " PUBLIC
@@ -41,6 +42,14 @@ function! s:PivoBufferOpen()
     endif
 endfunction
 
+function! s:PivoIndianaJohnes()
+	let ret = system("cp " . shellescape(g:currentDir) . "/pivo_on.sh ~/netguru/vim_pivo/.git/prepare-commit-msg")
+endfunction
+
+function! s:PivoDetach()
+	let ret = system("rm ~/netguru/vim_pivo/.git/prepare-commit-msg")
+endfunction
+
 function! s:PivoInsert()
     " Insert current PivoId to the current buffer
     call s:GetPivoId()
@@ -49,6 +58,8 @@ endfunction
 
 command! -nargs=0 Pivo call s:PivoBufferOpen()
 command! -nargs=0 PivoInsert call s:PivoInsert()
+command! -nargs=0 PivoIndianaJones call s:PivoIndianaJohnes()
+command! -nargs=0 PivoDetach call s:PivoDetach()
 
 " PRIVATE
 
@@ -58,12 +69,27 @@ function! s:SetPivoConnection()
 endfunction
 
 function! s:UpdateCurrentPivoIdDisplay()
+    call s:GetPivoId()
     call search(g:PivoId)
     execute "s/  /\* /"
 endfunction
 
+function! g:SetCurrentPivoId()
+    let line = getline(".")
+    let line2 = substitute(line, '^.*[', '', 'g')
+    let repl = substitute(line2, '].*$', '', 'g')
+    setlocal modifiable
+    execute "%s/*/ /g"
+    call search(repl)
+    execute "s/  /\* /"
+    setlocal readonly
+    let cmd1 = "echo \[" . shellescape(repl) . "\] > /tmp/current_pivo.id"
+    call system(cmd1)
+endfunction
+
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
+    nnoremap <buffer> c :call g:SetCurrentPivoId()<CR>
     setlocal nowrap
     setlocal nonumber
     setlocal readonly
@@ -73,9 +99,8 @@ function! s:SetPivoBuffer()
 endfunction
 
 function! s:SetupPivo()
-    call s:GetPivoId()
-    call s:UpdateCurrentPivoIdDisplay()
     call s:SetPivoConnection()
+    call s:UpdateCurrentPivoIdDisplay()
     call s:SetPivoBuffer()
 endfunction
 autocmd BufNewFile __Pivotal__ call s:SetupPivo()
