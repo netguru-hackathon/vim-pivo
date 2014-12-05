@@ -43,11 +43,13 @@ function! s:PivoBufferOpen()
 endfunction
 
 function! s:PivoIndianaJohnes()
-	let ret = system("cp " . shellescape(g:currentDir) . "/pivo_on.sh ~/netguru/vim_pivo/.git/prepare-commit-msg")
+	let cmdIndiana = "cp " . g:currentDir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
+	echo cmdIndiana
+	let ret = system(cmdIndiana)
 endfunction
 
 function! s:PivoDetach()
-	let ret = system("rm ~/netguru/vim_pivo/.git/prepare-commit-msg")
+	let ret = system("rm ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg")
 endfunction
 
 function! s:PivoInsert()
