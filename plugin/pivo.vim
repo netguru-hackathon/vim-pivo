@@ -13,7 +13,6 @@ set cpo&vim
 "TODO: Make sure that subs works from the ^
 "TODO: Not always connect to the Pivotal
 "TODO: Some configuration for caching
-"TODO: Rename repo to vim-pivo
 
 "TODO: BUffor name as project name?
 let PivoBufferName = "__Pivotal__"
