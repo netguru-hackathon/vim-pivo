@@ -4,11 +4,11 @@ Note: Right now this is our hack-ish VimL playground. It's not even ready in 1%.
 
 ## About
 
-`vim-pivo` is a plugin to Vim text editor which will allow to manage Pivotal Tracker stories right inside of Vim. No more leaving your favorite editor to visit point'n'click land of web browsers just for starting a new task. Also, you will be able to mark one task as what we call _current_ and it will be added to your Git commit message in format: `[#<task_id]` so your manager is kept happy.
+`vim-pivo` is a plugin to Vim text editor which will allow to manage Pivotal Tracker stories right inside Vim. No more leaving your favorite editor to visit point'n'click land of web browsers just to start a new task. Also, you will be able to mark one task as what we call _the current_ and it will be added to your Git commit message in format: `[#<task_id]` so your manager will be kept happy.
 
 ## Configuration
 
-You will need to install [pivotal-tracker](https://github.com/jsmestad/pivotal-tracker) gem first:
+You need to install [pivotal-tracker](https://github.com/jsmestad/pivotal-tracker) gem first:
 
 ```
 sudo gem install pivotal-tracker
