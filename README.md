@@ -19,4 +19,4 @@ let g:PivoApiToken   = "API_KEY"
 
 Those are only some hacks gathered during our hackaton. When we fix all the issues and solve all the crimes, we may even increase the version number to 0.1.0 - who knows.
 
-Created by [Jakub Naliwajek](https://github.com/naliwajek), [Michał Poczwardowski](https://github.com/dmp0x7c5). Maintaed by [netguru](https://netguru.co).
+Created by [Jakub Naliwajek](https://github.com/naliwajek), [Michał Poczwardowski](https://github.com/dmp0x7c5). Maintaned by [netguru](https://netguru.co).
