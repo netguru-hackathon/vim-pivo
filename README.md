@@ -8,6 +8,12 @@ Note: Right now this is our hack-ish VimL playground. It's not even ready in 1%.
 
 ## Configuration
 
+You will need to install [pivotal-tracker](https://github.com/jsmestad/pivotal-tracker) gem first:
+
+```
+sudo gem install pivotal-tracker
+```
+
 Set following variables in your `.vimrc`:
 
 ```
