@@ -19,8 +19,7 @@ let PivoBufferName = "__Pivotal__"
 
 let currentDir = expand('<sfile>:p:h')
 "TODO: cat without newline at the begining
-"let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
-let cmdListStories = "cat ~/netguru/vim_pivo/pivo_mock"
+let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
 let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 "TODO: Vim way instead of cat files?
 
