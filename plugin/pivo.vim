@@ -20,6 +20,7 @@ let PivoBufferName = "__Pivotal__"
 let currentDir = expand('<sfile>:p:h')
 "TODO: cat without newline at the begining
 let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
+let cmdAccept = 'ruby ' . shellescape(currentDir) . '/pivo.rb accept ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
 let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 "TODO: Vim way instead of cat files?
 
@@ -28,6 +29,14 @@ let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
 function! s:GetPivoId()
     let g:PivoId = system(g:cmdPivoId)
 endfunction
+
+function! s:AcceptPivoStory()
+    " accept
+    let repl = "84004840"
+    let cmdAccept = g:cmdAccept . ' "' . repl . '"'
+    call system(cmdAccept)
+endfunction
+command! -nargs=0 PivoAccept call s:AcceptPivoStory()
 
 function! s:PivoBufferOpen()
     " Check whether the buffer is already created
