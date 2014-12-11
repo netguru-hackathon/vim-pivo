@@ -1,6 +1,6 @@
 require 'pivotal-tracker'
 
-# Usage: ruby pivo.rb print_stories API_TOKEN PROJECT_ID
+# Usage: ruby pivo.rb <operation> API_TOKEN PROJECT_ID [<params>]
 
 class Pivo
   attr_reader :project
@@ -11,7 +11,7 @@ class Pivo
     @project = PivotalTracker::Project.find(project_id)
   end
 
-  def print_stories
+  def print_stories(*)
     project.stories.all.each do |story|
       puts "  [##{story.id}] - {#{story.current_state}} #{story.name} {#{story.owned_by}}"
     end
@@ -30,8 +30,5 @@ class Pivo
   end
 end
 
-pivo = Pivo.new(ARGV[1], ARGV[2])
-case ARGV[0]
-when 'print_stories'
-  pivo.print_stories
-end
+raise NoMethodError unless Pivo.method_defined?(ARGV[0])
+Pivo.new(ARGV[1], ARGV[2]).public_send(ARGV[0], ARGV[3])
