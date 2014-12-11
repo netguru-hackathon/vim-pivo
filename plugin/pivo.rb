@@ -1,6 +1,6 @@
 require 'pivotal-tracker'
 
-# Usage: ruby pivo.rb <operation> API_TOKEN PROJECT_ID [<params>]
+# Usage: ruby pivo.rb <operation> <api_token> <project_id> [<params>]
 
 class Pivo
   attr_reader :project
