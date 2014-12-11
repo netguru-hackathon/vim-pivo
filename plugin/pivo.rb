@@ -16,6 +16,18 @@ class Pivo
       puts "  [##{story.id}] - {#{story.current_state}} #{story.name} {#{story.owned_by}}"
     end
   end
+
+  %w(start finish deliver accept reject).each do |operation|
+    define_method(operation) do |story_id|
+      find(story_id).update(current_state: "#{operation}ed")
+    end
+  end
+
+  private
+
+  def find(story_id)
+    @project.stories.find(story_id)
+  end
 end
 
 pivo = Pivo.new(ARGV[1], ARGV[2])
