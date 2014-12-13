@@ -1,6 +1,6 @@
 # vim-pivo
 
-Note: Right now this is our hack-ish VimL playground. It's not even ready in 1%.
+Note: Right now this is our hack-ish VimL playground. It's not even ready in 4%.
 
 ## About
 
