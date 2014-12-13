@@ -1,4 +1,3 @@
-" BEGIN
 if exists("g:loaded_pivo") || &cp
   finish
 endif
@@ -6,37 +5,78 @@ let g:loaded_pivo = 1
 let s:keepcpo     = &cpo
 set cpo&vim
 
-"TODO: Investigate /n in subs
-"TODO: DO NOT SAVE API_KEYS in .vimrc
-"TODO: TEst it out
-"TODO: Fix readme header
-"TODO: Make sure that subs works from the ^
-"TODO: Not always connect to the Pivotal
-"TODO: Some configuration for caching
-
-"TODO: BUffor name as project name?
 let PivoBufferName = "__Pivotal__"
 
-let currentDir = expand('<sfile>:p:h')
-"TODO: cat without newline at the begining
-let cmdListStories = 'ruby ' . shellescape(currentDir) . '/pivo.rb print_stories ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
-let cmdAccept = 'ruby ' . shellescape(currentDir) . '/pivo.rb accept ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId)
-let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
-"TODO: Vim way instead of cat files?
+let current_dir       = expand('<sfile>:p:h')
 
-" PUBLIC
-"
+let cmd_begin         = 'ruby ' . current_dir . '/pivo.rb '
+let cmd_end           = ' ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId) . ' '
+
+let cmd_print_stories = cmd_begin . 'print_stories' . cmd_end
+let cmd_start         = cmd_begin . 'start' . cmd_end
+let cmd_finish        = cmd_begin . 'finish' . cmd_end
+let cmd_deliver       = cmd_begin . 'deliver' . cmd_end
+let cmd_accept        = cmd_begin . 'accept' . cmd_end
+let cmd_reject        = cmd_begin . 'reject' . cmd_end
+
+let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
+
 function! s:GetPivoId()
     let g:PivoId = system(g:cmdPivoId)
 endfunction
 
-function! s:AcceptPivoStory()
-    " accept
-    let repl = "84004840"
-    let cmdAccept = g:cmdAccept . ' "' . repl . '"'
-    call system(cmdAccept)
+function! g:PivoStart()
+    let current_id = g:GetIdFromCurrentLineWithoutHash()
+    let cmd_start = g:cmd_start . "'" . current_id . "'"
+
+    s/\[...]/\[ f ]/
+    call system(cmd_start)
 endfunction
-command! -nargs=0 PivoAccept call s:AcceptPivoStory()
+
+function! g:PivoFinish()
+    let current_id = g:GetIdFromCurrentLineWithoutHash()
+    let cmd_finish = g:cmd_finish . "'" . current_id . "'"
+
+    s/\[...]/\[ d ]/
+    call system(cmd_finish)
+endfunction
+
+function! g:PivoDeliver()
+    let current_id = g:GetIdFromCurrentLineWithoutHash()
+    let cmd_deliver = g:cmd_deliver . "'" . current_id . "'"
+
+    s/\[...]/\[a\/r]/
+    call system(cmd_deliver)
+endfunction
+
+function! g:PivoAccept()
+    let current_id = g:GetIdFromCurrentLineWithoutHash()
+    let cmd_accept = g:cmd_accept . "'" . current_id . "'"
+
+    s/\[...]/\[ \+ ]/
+    call system(cmd_accept)
+endfunction
+
+function! g:PivoReject()
+    let current_id = g:GetIdFromCurrentLineWithoutHash()
+    let cmd_reject = g:cmd_reject . "'" . current_id . "'"
+
+    s/\[...]/\[\-s\-/
+    call system(cmd_reject)
+endfunction
+
+function! g:GetIdFromCurrentLineWithoutHash()
+    let line = getline(".")
+    let line2 = substitute(line, '^.*[#', '', 'g')
+    let repl = substitute(line2, '].*$', '', 'g')
+    setlocal modifiable
+    execute "%s/*/ /g"
+    "TODO: Read only warning!
+    call search(repl)
+    execute "s/  /\* /"
+    setlocal readonly
+    return repl
+endfunction
 
 function! s:PivoBufferOpen()
     " Check whether the buffer is already created
@@ -62,8 +102,8 @@ function! s:PivoBufferOpen()
 endfunction
 
 function! s:PivoIndianaJohnes()
-    "TODO: make it work? and maybe use the Vim way? 
-    let cmdIndiana = "cp " . g:currentDir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
+    "TODO: make it work? and maybe use the Vim way?
+    let cmdIndiana = "cp " . g:current_dir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
     echo cmdIndiana
     let ret = system(cmdIndiana)
 endfunction
@@ -88,8 +128,8 @@ command! -nargs=0 PivoDetach call s:PivoDetach()
 " PRIVATE
 
 function! s:SetPivoConnection()
-	let storiesOutput = system(g:cmdListStories)
-	call append(line('$'), split(storiesOutput, "\n"))
+    let storiesOutput = system(g:cmd_print_stories)
+    call append(line('$'), split(storiesOutput, "\n"))
 endfunction
 
 function! s:UpdateCurrentPivoIdDisplay()
@@ -114,8 +154,15 @@ endfunction
 
 function! s:SetPivoBuffer()
     nnoremap <buffer> q :quit<CR>
+
     "TODO: Change 'c' to '-' -> fugitive way
     nnoremap <buffer> c :call g:SetCurrentPivoId()<CR>
+
+    nnoremap <buffer> s :call g:PivoStart()<CR>
+    nnoremap <buffer> f :call g:PivoFinish()<CR>
+    nnoremap <buffer> d :call g:PivoDeliver()<CR>
+    nnoremap <buffer> a :call g:PivoAccept()<CR>
+    nnoremap <buffer> r :call g:PivoReject()<CR>
     setlocal nowrap
     setlocal nonumber
     setlocal readonly
