@@ -30,7 +30,7 @@ function! g:PivoStart()
     let cmd_start = g:cmd_start . "'" . current_id . "'"
 
     s/\[...]/\[ f ]/
-    call system(cmd_start)
+    Dispatch! cmd_start
 endfunction
 
 function! g:PivoFinish()
@@ -38,7 +38,7 @@ function! g:PivoFinish()
     let cmd_finish = g:cmd_finish . "'" . current_id . "'"
 
     s/\[...]/\[ d ]/
-    call system(cmd_finish)
+    Dispatch! cmd_finish
 endfunction
 
 function! g:PivoDeliver()
@@ -46,7 +46,7 @@ function! g:PivoDeliver()
     let cmd_deliver = g:cmd_deliver . "'" . current_id . "'"
 
     s/\[...]/\[a\/r]/
-    call system(cmd_deliver)
+    Dispatch! cmd_deliver
 endfunction
 
 function! g:PivoAccept()
@@ -54,7 +54,7 @@ function! g:PivoAccept()
     let cmd_accept = g:cmd_accept . "'" . current_id . "'"
 
     s/\[...]/\[ \+ ]/
-    call system(cmd_accept)
+    Dispatch! cmd_accept
 endfunction
 
 function! g:PivoReject()
@@ -62,7 +62,7 @@ function! g:PivoReject()
     let cmd_reject = g:cmd_reject . "'" . current_id . "'"
 
     s/\[...]/\[\-s\-/
-    call system(cmd_reject)
+    Dispatch! cmd_reject
 endfunction
 
 function! g:GetIdFromCurrentLineWithoutHash()
