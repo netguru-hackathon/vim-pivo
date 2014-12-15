@@ -103,13 +103,23 @@ endfunction
 
 function! s:PivoIndianaJohnes()
     "TODO: make it work? and maybe use the Vim way?
-    let cmdIndiana = "cp " . g:current_dir . "/pivo_on.sh ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg"
-    echo cmdIndiana
-    let ret = system(cmdIndiana)
+    if finddir('.git', '.') != '.git'
+        echo 'Could not find .git directory'
+	return 1
+    endif
+    let cmdIndiana = "cp " . g:current_dir . "/pv-prepare-commit-msg.rb .git/hooks/prepare-commit-msg"
+    call system(cmdIndiana)
+    call system('chmod 0755 .git/hooks/prepare-commit-msg')
+    echo 'Git hook attached'
 endfunction
 
 function! s:PivoDetach()
-    let ret = system("rm ~/netguru/vim_pivo/.git/hooks/prepare-commit-msg")
+    if finddir('.git', '.') != '.git'
+        echo 'Cound not find .git directory'
+	return 1
+    endif
+    call system('rm .git/hooks/prepare-commit-msg')
+    echo 'Git hook removed'
 endfunction
 
 function! s:PivoInsert()
