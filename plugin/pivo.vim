@@ -70,11 +70,12 @@ function! g:GetIdFromCurrentLineWithoutHash()
     let line2 = substitute(line, '^.*[#', '', 'g')
     let repl = substitute(line2, '].*$', '', 'g')
     setlocal modifiable
+    setlocal noreadonly
     execute "%s/*/ /ge"
-    "TODO: Read only warning!
     call search(repl)
     execute "s/  /\* /e"
     setlocal readonly
+    setlocal nomodifiable
     return repl
 endfunction
 
@@ -153,11 +154,12 @@ function! g:SetCurrentPivoId()
     let line2 = substitute(line, '^.*[', '', 'g')
     let repl = substitute(line2, '].*$', '', 'g')
     setlocal modifiable
+    setlocal noreadonly
     execute "%s/*/ /ge"
-    "TODO: Read only warning!
     call search(repl)
     execute "s/  /\* /e"
     setlocal readonly
+    setlocal nomodifiable
     let cmd1 = "echo \[" . shellescape(repl) . "\] > /tmp/current_pivo.id"
     call system(cmd1)
 endfunction
