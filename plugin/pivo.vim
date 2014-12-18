@@ -29,7 +29,7 @@ function! g:PivoStart()
     let current_id = g:GetIdFromCurrentLineWithoutHash()
     let cmd_start = g:cmd_start . "'" . current_id . "'"
 
-    s/\[...]/\[ f ]/
+    s/\[...]/\[ f ]/e
     Dispatch! cmd_start
 endfunction
 
@@ -37,7 +37,7 @@ function! g:PivoFinish()
     let current_id = g:GetIdFromCurrentLineWithoutHash()
     let cmd_finish = g:cmd_finish . "'" . current_id . "'"
 
-    s/\[...]/\[ d ]/
+    s/\[...]/\[ d ]/e
     Dispatch! cmd_finish
 endfunction
 
@@ -45,7 +45,7 @@ function! g:PivoDeliver()
     let current_id = g:GetIdFromCurrentLineWithoutHash()
     let cmd_deliver = g:cmd_deliver . "'" . current_id . "'"
 
-    s/\[...]/\[a\/r]/
+    s/\[...]/\[a\/r]/e
     Dispatch! cmd_deliver
 endfunction
 
@@ -53,7 +53,7 @@ function! g:PivoAccept()
     let current_id = g:GetIdFromCurrentLineWithoutHash()
     let cmd_accept = g:cmd_accept . "'" . current_id . "'"
 
-    s/\[...]/\[ \+ ]/
+    s/\[...]/\[ \+ ]/e
     Dispatch! cmd_accept
 endfunction
 
@@ -61,7 +61,7 @@ function! g:PivoReject()
     let current_id = g:GetIdFromCurrentLineWithoutHash()
     let cmd_reject = g:cmd_reject . "'" . current_id . "'"
 
-    s/\[...]/\[\-s\-/
+    s/\[...]/\[\-s\-/e
     Dispatch! cmd_reject
 endfunction
 
@@ -70,10 +70,10 @@ function! g:GetIdFromCurrentLineWithoutHash()
     let line2 = substitute(line, '^.*[#', '', 'g')
     let repl = substitute(line2, '].*$', '', 'g')
     setlocal modifiable
-    execute "%s/*/ /g"
+    execute "%s/*/ /ge"
     "TODO: Read only warning!
     call search(repl)
-    execute "s/  /\* /"
+    execute "s/  /\* /e"
     setlocal readonly
     return repl
 endfunction
@@ -145,7 +145,7 @@ endfunction
 function! s:UpdateCurrentPivoIdDisplay()
     call s:GetPivoId()
     call search(g:PivoId)
-    execute "s/  /\* /"
+    execute "s/  /\* /e"
 endfunction
 
 function! g:SetCurrentPivoId()
@@ -153,10 +153,10 @@ function! g:SetCurrentPivoId()
     let line2 = substitute(line, '^.*[', '', 'g')
     let repl = substitute(line2, '].*$', '', 'g')
     setlocal modifiable
-    execute "%s/*/ /g"
+    execute "%s/*/ /ge"
     "TODO: Read only warning!
     call search(repl)
-    execute "s/  /\* /"
+    execute "s/  /\* /e"
     setlocal readonly
     let cmd1 = "echo \[" . shellescape(repl) . "\] > /tmp/current_pivo.id"
     call system(cmd1)
