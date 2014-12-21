@@ -136,8 +136,8 @@ command! -nargs=0 PivoGitHookOff call s:PivoGitHookOff()
 " PRIVATE
 
 function! s:SetPivoConnection()
-  let storiesOutput = system(g:cmd_print_stories)
-  call append(line('$'), split(storiesOutput, "\n"))
+  let lines_list = split(system(g:cmd_print_stories), "\n")
+  call setline(1, lines_list)
 endfunction
 
 function! s:UpdateCurrentPivoIdDisplay()
