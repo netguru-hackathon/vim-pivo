@@ -8,6 +8,7 @@ set cpo&vim
 let PivoBufferName = "__Pivotal__"
 
 let current_dir = expand('<sfile>:p:h')
+let current_id_file_path = '/tmp/current_pivo.id'
 
 let cmd_begin         = 'ruby ' . current_dir . '/pivo.rb '
 let cmd_end           = ' ' . shellescape(PivoApiToken) . ' ' . shellescape(PivoProjectId) . ' '
@@ -18,7 +19,7 @@ let cmd_deliver       = cmd_begin . 'deliver' . cmd_end
 let cmd_accept        = cmd_begin . 'accept' . cmd_end
 let cmd_reject        = cmd_begin . 'reject' . cmd_end
 
-let cmdPivoId = "cat /tmp/current_pivo.id | tr -d '\n'"
+let cmdPivoId = "cat " . current_id_file_path . " | tr -d '\n'"
 
 function! s:GetPivoId()
   let g:PivoId = system(g:cmdPivoId)
@@ -147,16 +148,14 @@ function! s:UpdateCurrentPivoIdDisplay()
 endfunction
 
 function! g:SetCurrentPivoId()
-  let line = getline(".")
-  let line2 = substitute(line, '^.*[', '', 'g')
-  let repl = substitute(line2, '].*$', '', 'g')
+  let id = matchstr(getline('.'), '#\d*', 0, 1)
   setlocal noreadonly
-  execute "%s/*/ /ge"
-  call search(repl)
+  execute "%s/* /  /ge"
+  call search(id)
   execute "s/  /\* /e"
   setlocal readonly
-  let cmd1 = "echo \[" . shellescape(repl) . "\] > /tmp/current_pivo.id"
-  Dispatch! cmd1
+  let cmd = 'echo \[' . id . '\] > ' . g:current_id_file_path
+  call system(cmd)
 endfunction
 
 function! s:SetPivoBuffer()
