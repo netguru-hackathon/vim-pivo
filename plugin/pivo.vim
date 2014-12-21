@@ -100,8 +100,8 @@ function! s:PivoBufferOpen()
   endif
 endfunction
 
-function! s:PivoIndianaJohnes()
-  "TODO: make it work? and maybe use the Vim way?
+function! s:PivoGitHookOn()
+  "TODO: maybe use the Vim way?
   if finddir('.git', '.') != '.git'
     echo 'Could not find .git directory'
     return 1
@@ -112,7 +112,7 @@ function! s:PivoIndianaJohnes()
   echo 'Git hook attached'
 endfunction
 
-function! s:PivoDetach()
+function! s:PivoGitHookOff()
   if finddir('.git', '.') != '.git'
     echo 'Cound not find .git directory'
     return 1
@@ -130,9 +130,8 @@ endfunction
 
 command! -nargs=0 Pivo call s:PivoBufferOpen()
 command! -nargs=0 PivoInsert call s:PivoInsert()
-"TODO: better name for Indiana
-command! -nargs=0 PivoIndianaJones call s:PivoIndianaJohnes()
-command! -nargs=0 PivoDetach call s:PivoDetach()
+command! -nargs=0 PivoGitHookOn call s:PivoGitHookOn()
+command! -nargs=0 PivoGitHookOff call s:PivoGitHookOff()
 
 " PRIVATE
 
