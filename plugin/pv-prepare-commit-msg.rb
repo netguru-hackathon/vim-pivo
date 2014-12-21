@@ -7,7 +7,7 @@ if File.exists?(story_path)
     commit_msg = IO.read(commit_msg_file_path)
     unless commit_msg.include?($1) or commit_msg =~ /Merge branch/
       File.open(commit_msg_file_path, 'w') do |file|
-        file.print story_id
+        file.print "\n" + story_id
         file.print commit_msg
       end
     end
