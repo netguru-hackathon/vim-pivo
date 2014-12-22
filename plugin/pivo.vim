@@ -164,10 +164,7 @@ endfunction
 
 function! s:SetPivoBuffer()
   nnoremap <buffer> q :quit<CR>
-
-  "TODO: Change 'c' to '-' -> fugitive way
-  nnoremap <buffer> c :call g:SetCurrentPivoId()<CR>
-
+  nnoremap <buffer> - :call g:SetCurrentPivoId()<CR>
   nnoremap <buffer> s :call g:PivoStart()<CR>
   nnoremap <buffer> f :call g:PivoFinish()<CR>
   nnoremap <buffer> d :call g:PivoDeliver()<CR>
